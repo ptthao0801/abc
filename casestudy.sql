@@ -57,6 +57,21 @@ select * from Subject;
 
 select * from Grade;
 
+SELECT
+    Student.nameStudent AS "Tên sinh viên",
+    Student.dob AS "Ngày sinh",
+    Class.nameClass AS "Tên lớp",
+    MAX(CASE WHEN Subject.nameSubject = 'Toan' THEN Grade.grade ELSE NULL END) AS "Điểm Toán",
+    MAX(CASE WHEN Subject.nameSubject = 'Van' THEN Grade.grade ELSE NULL END) AS "Điểm Văn",
+    MAX(CASE WHEN Subject.nameSubject = 'Anh' THEN Grade.grade ELSE NULL END) AS "Điểm Anh",
+    AVG(Grade.grade) AS "Điểm trung bình"
+FROM Student
+         JOIN Class ON Student.id_class = Class.id
+         JOIN Grade ON Student.id = Grade.id_student
+         JOIN Subject ON Grade.id_subject = Subject.id
+GROUP BY Student.id
+
+
 
 
 
