@@ -8,7 +8,11 @@ public class StudentService implements IStudentService {
 
     @Override
     public List<Student> showAll() {
-        return studentDAO.getAllStudents();
+        return StudentDAO.getAllStudents();
+    }
+static StudentService studentService = new StudentService();
+    public static void main(String[] args) {
+        studentService.showAll();
     }
 
     @Override

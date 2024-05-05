@@ -9,7 +9,7 @@
 <div class="container">
     <h2>Tạo Sinh Viên Mới</h2>
     <form action="/student" method="post">
-        <input type="hidden" name="command" value="create">
+        <input type="hidden" name="action" value="create">
         <div class="mb-3">
             <label for="nameStudent" class="form-label">Tên Sinh Viên:</label>
             <input type="text" class="form-control" id="nameStudent" name="nameStudent" required>
@@ -19,8 +19,8 @@
             <input type="date" class="form-control" id="dob" name="dob" required>
         </div>
         <div class="mb-3">
-            <label for="id_class" class="form-label">ID Lớp:</label>
-            <input type="number" class="form-control" id="id_class" name="id_class" required>
+            <label for="name_class" class="form-label">Tên Lớp:</label>
+            <input type="text" class="form-control" id="name_class" name="name_class" required>
         </div>
         <button type="submit" class="btn btn-primary">Tạo</button>
         <a href="/student?command=list">Quay lại</a>

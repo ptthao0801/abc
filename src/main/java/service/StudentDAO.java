@@ -1,6 +1,10 @@
 package service;
 
+import controller.StudentServlet;
 import model.Student;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +14,12 @@ public class StudentDAO {
     private static final String JDBC_USERNAME = "root";
     private static final String JDBC_PASSWORD = "khoatrinh18122001";
 
-    protected Connection getConnection() {
+    static Connection getConnection() {
         Connection connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
+            System.out.println("thanh cong ket noi");
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Lỗi kết nối");
@@ -25,7 +30,9 @@ public class StudentDAO {
         return connection;
     }
 
-    public List<Student> getAllStudents() {
+
+
+    public static List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
         String query = "SELECT s.id, s.nameStudent, s.dob, c.nameClass, g.gradeToan, g.gradeVan, g.gradeAnh FROM Student s JOIN Class c ON s.id_class = c.id JOIN (SELECT id_student, MAX(CASE WHEN id_subject = 1 THEN grade ELSE NULL END) as gradeToan, MAX(CASE WHEN id_subject = 2 THEN grade ELSE NULL END) as gradeVan, MAX(CASE WHEN id_subject = 3 THEN grade ELSE NULL END) as gradeAnh FROM Grade GROUP BY id_student) g ON s.id = g.id_student";
 
@@ -46,8 +53,12 @@ public class StudentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        for(Student student:students){
+            System.out.println(student);
+        }
         return students;
     }
+
     public Student getStudentById(int id) {
         Student student = null;
         String query = "SELECT s.id, s.nameStudent, s.dob, c.nameClass, g.gradeToan, g.gradeVan, g.gradeAnh FROM Student s JOIN Class c ON s.id_class = c.id JOIN (SELECT id_student, MAX(CASE WHEN id_subject = 1 THEN grade ELSE NULL END) as gradeToan, MAX(CASE WHEN id_subject = 2 THEN grade ELSE NULL END) as gradeVan, MAX(CASE WHEN id_subject = 3 THEN grade ELSE NULL END) as gradeAnh FROM Grade GROUP BY id_student) g ON s.id = g.id_student WHERE s.id = ?";
@@ -87,12 +98,12 @@ public class StudentDAO {
     }
 
     public void updateStudent(Student student) {
-        String query = "UPDATE Student SET nameStudent = ?, dob = ?, id_class = ? WHERE id = ?";
+        String query = "UPDATE Student SET nameStudent = ?, dob = ?, nameClass = ?,  WHERE id = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, student.getNameStudent());
             stmt.setDate(2, new java.sql.Date(student.getDob().getTime()));
-            stmt.setInt(3, student.getId());
+            stmt.setString(3, student.getNameClass());
             stmt.setInt(4, student.getStudentId());
             stmt.executeUpdate();
         } catch (SQLException e) {

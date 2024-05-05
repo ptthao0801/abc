@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +10,7 @@
 <body>
 <div class="container">
   <h1>View Student Details</h1>
-  <form action="/students">
+  <form>
     <div class="mb-3">
       <label for="nameStudent" class="form-label">Tên Sinh Viên:</label>
       <input type="text" class="form-control" id="nameStudent" name="nameStudent" value="${student.nameStudent}" readonly>
@@ -18,8 +20,8 @@
       <input type="date" class="form-control" id="dob" name="dob" value="${student.dob}" readonly>
     </div>
     <div class="mb-3">
-      <label for="id_class" class="form-label">ID Lớp:</label>
-      <input type="number" class="form-control" id="id_class" name="id_class" value="${student.id_class}" readonly>
+      <label for="name_class" class="form-label">Tên Lớp:</label>
+      <input type="text" class="form-control" id="name_class" name="name_class" value="${student.nameClass}" readonly>
     </div>
     <div class="mb-3">
       <label for="gradeToan" class="form-label">Điểm Toán:</label>
@@ -37,7 +39,7 @@
       <label for="gradeAVG" class="form-label">Điểm Trung Bình:</label>
       <input type="text" class="form-control" id="gradeAVG" name="gradeAVG" value="${student.scoreAVG()}" readonly>
     </div>
-<%--    <a href="/student?command=list" class="btn btn-primary">Quay lại</a>--%>
+    <a href="students?action=list" class="btn btn-primary">Quay lại</a>
   </form>
 </div>
 </body>

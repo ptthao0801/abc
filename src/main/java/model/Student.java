@@ -74,7 +74,7 @@ public class Student extends Class implements GradeAVG {
 
     @Override
     public double scoreAVG() {
-        return (getGradeToan()*getGradeVan()*getGradeAnh())/3;
+        return (getGradeToan()+getGradeVan()+getGradeAnh())/3;
     }
 
     @Override

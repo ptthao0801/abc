@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,7 +14,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Date of Birth</th>
-            <th>Class ID</th>
+            <th>Class Name</th>
             <th>Actions</th>
         </tr>
         <c:forEach var="student" items="${students}">
@@ -21,7 +22,7 @@
                 <td><c:out value="${student.id}"/></td>
                 <td><c:out value="${student.nameStudent}"/></td>
                 <td><c:out value="${student.dob}"/></td>
-                <td><c:out value="${student.id_class}"/></td>
+                <td><c:out value="${student.nameClass}"/></td>
                 <td>
                     <a href="students?action=view&id=${student.id}">View</a>
                     <a href="students?action=edit&id=${student.id}">Edit</a>
