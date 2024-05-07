@@ -1,18 +1,16 @@
 package service;
 
 import model.Student;
+
 import java.util.List;
+
 
 public class StudentService implements IStudentService {
     private StudentDAO studentDAO = new StudentDAO();
 
     @Override
     public List<Student> showAll() {
-        return StudentDAO.getAllStudents();
-    }
-static StudentService studentService = new StudentService();
-    public static void main(String[] args) {
-        studentService.showAll();
+        return studentDAO.getAllStudents();
     }
 
     @Override
@@ -21,8 +19,8 @@ static StudentService studentService = new StudentService();
     }
 
     @Override
-    public Student searchById(int id) {
-        return studentDAO.getStudentById(id);
+    public Student searchById(int studentId) {
+        return studentDAO.getStudentById(studentId);
     }
 
     @Override
@@ -31,7 +29,8 @@ static StudentService studentService = new StudentService();
     }
 
     @Override
-    public void delete(int id) {
-        studentDAO.deleteStudent(id);
+    public void delete(int studentId) {
+        studentDAO.deleteStudent(studentId);
     }
 }
+

@@ -19,14 +19,14 @@
         </tr>
         <c:forEach var="student" items="${students}">
             <tr>
-                <td><c:out value="${student.id}"/></td>
+                <td><c:out value="${student.studentId}"/></td>
                 <td><c:out value="${student.nameStudent}"/></td>
                 <td><c:out value="${student.dob}"/></td>
-                <td><c:out value="${student.nameClass}"/></td>
+<%--                <td><c:out value="${student.nameClass}"/></td>--%>
                 <td>
-                    <a href="students?action=view&id=${student.id}">View</a>
-                    <a href="students?action=edit&id=${student.id}">Edit</a>
-                    <a href="students?action=delete&id=${student.id}">Delete</a>
+                    <a href="students?action=view&id=${student.studentId}">View</a>
+                    <a href="students?action=edit&id=${student.studentId}">Edit</a>
+                    <a href="students?action=delete&id=${student.studentId}">Delete</a>
                 </td>
             </tr>
         </c:forEach>

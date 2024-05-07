@@ -8,7 +8,7 @@ create table Class (
 );
 
 create table Student (
-    id int auto_increment primary key,
+    studentId int auto_increment primary key,
     nameStudent varchar(255),
     dob date,
     id_class int, foreign key (id_class) references Class (id)
@@ -20,7 +20,7 @@ create table Subject (
 );
 
 create table Grade (
-    id_student int, foreign key (id_student) references Student (id),
+    id_student int, foreign key (id_student) references Student (studentId),
     id_subject int, foreign key (id_subject) references Subject (id),
     primary key (id_student, id_subject),
     grade double
@@ -57,19 +57,32 @@ select * from Subject;
 
 select * from Grade;
 
+CREATE VIEW AllStudent AS
 SELECT
-    Student.nameStudent AS "Tên sinh viên",
-    Student.dob AS "Ngày sinh",
-    Class.nameClass AS "Tên lớp",
-    MAX(CASE WHEN Subject.nameSubject = 'Toan' THEN Grade.grade ELSE NULL END) AS "Điểm Toán",
-    MAX(CASE WHEN Subject.nameSubject = 'Van' THEN Grade.grade ELSE NULL END) AS "Điểm Văn",
-    MAX(CASE WHEN Subject.nameSubject = 'Anh' THEN Grade.grade ELSE NULL END) AS "Điểm Anh",
-    AVG(Grade.grade) AS "Điểm trung bình"
-FROM Student
-         JOIN Class ON Student.id_class = Class.id
-         JOIN Grade ON Student.id = Grade.id_student
-         JOIN Subject ON Grade.id_subject = Subject.id
-GROUP BY Student.id
+    s.studentId AS studentID,
+    s.nameStudent AS nameStudent,
+    c.nameClass AS nameClass,
+    s.dob AS dob,
+    MAX(CASE WHEN su.nameSubject = 'Toan' THEN g.grade ELSE NULL END) AS gradeToan,
+    MAX(CASE WHEN su.nameSubject = 'Van' THEN g.grade ELSE NULL END) AS gradeVan,
+    MAX(CASE WHEN su.nameSubject = 'Anh' THEN g.grade ELSE NULL END) AS gradeAnh
+FROM
+    Student s
+        LEFT JOIN
+    Class c ON s.id_class = c.id
+        LEFT JOIN
+    Grade g ON s.studentId = g.id_student
+        RIGHT JOIN
+    Subject su ON g.id_subject = su.id
+GROUP BY
+    s.studentId, s.nameStudent, c.nameClass, s.dob;
+
+SELECT * FROM AllStudent;
+
+
+
+
+
 
 
 

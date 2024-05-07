@@ -2,7 +2,7 @@ package model;
 
 import java.util.Date;
 
-public class Student extends Class implements GradeAVG {
+public class Student implements GradeAVG {
     private int studentId;
     private String nameStudent;
     private Date dob;
@@ -14,8 +14,7 @@ public class Student extends Class implements GradeAVG {
     public Student() {
     }
 
-    public Student(int id, String nameClass, int studentId, String nameStudent, Date dob, double gradeToan, double gradeVan, double gradeAnh) {
-        super(id, nameClass);
+    public Student( int studentId, String nameStudent, Date dob, double gradeToan, double gradeVan, double gradeAnh) {
         this.studentId = studentId;
         this.nameStudent = nameStudent;
         this.dob = dob;
@@ -82,7 +81,6 @@ public class Student extends Class implements GradeAVG {
         return "Student{" +
                 "studentId=" + studentId +
                 ", nameStudent='" + nameStudent + '\'' +
-                ", nameClass=" + getNameClass() +
                 ", dob=" + dob +
                 ", gradeToan=" + gradeToan +
                 ", gradeVan=" + gradeVan +

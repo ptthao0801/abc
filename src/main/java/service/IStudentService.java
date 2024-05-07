@@ -4,15 +4,16 @@ import model.Student;
 
 import java.util.List;
 
+
 public interface IStudentService {
     List<Student> showAll();
 
-    void saveList(Student document);
+    void saveList(Student student);
 
-    Student searchById(int id);
+    Student searchById(int studentId);
 
 
     void update(int id, Student student);
 
-    void delete(int id);
+    void delete(int studentId);
 }

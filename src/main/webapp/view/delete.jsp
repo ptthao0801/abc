@@ -9,10 +9,11 @@
 <div class="container">
     <h1>Delete Student</h1>
     <p>Are you sure you want to delete this student?</p>
-    <form action="/student" method="post">
-        <input type="hidden" name="command" value="delete">
-        <input type="hidden" name="id" value="${student.id}">
-        <button type="submit" class="btn btn-danger">Delete</button>
+    <form method="post">
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="id" value="${student.studentId}">
+        <input type="submit" class="btn btn-danger" value="Delete">
+        <a href="students?action=list">Quay lại</a>
     </form>
 </div>
 </body>

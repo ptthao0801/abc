@@ -10,7 +10,7 @@
     <h1>Edit Student</h1>
     <form method="post">
         <input type="hidden" name="action" value="edit">
-        <input type="hidden" name="id" value="${student.id}">
+        <input type="hidden" name="studentId" value="${student.studentId}">
         <div class="mb-3">
             <label for="nameStudent" class="form-label">Tên Sinh Viên:</label>
             <input type="text" class="form-control" id="nameStudent" name="nameStudent" value="${student.nameStudent}" required>
@@ -23,18 +23,18 @@
             <label for="name_class" class="form-label">Tên Lớp:</label>
             <input type="text" class="form-control" id="name_class" name="name_class" value="${student.nameClass}" required>
         </div>
-<%--        <div class="mb-3">--%>
-<%--            <label for="math" class="form-label">Điểm Toán:</label>--%>
-<%--            <input type="number" step="any" class="form-control" id="math" name="math" value="${student.gradeToan}" required>--%>
-<%--        </div>--%>
-<%--        <div class="mb-3">--%>
-<%--            <label for="lit" class="form-label">Điểm Văn:</label>--%>
-<%--            <input type="number" step="any" class="form-control" id="lit" name="math" value="${student.gradeVan}" required>--%>
-<%--        </div>--%>
-<%--        <div class="mb-3">--%>
-<%--            <label for="eng" class="form-label">Điểm Anh:</label>--%>
-<%--            <input type="number" step="any" class="form-control" id="eng" name="math" value="${student.gradeAnh}" required>--%>
-<%--        </div>--%>
+        <div class="mb-3">
+            <label for="math" class="form-label">Điểm Toán:</label>
+            <input type="number" step="any" class="form-control" id="math" name="math" value="${student.gradeToan}" required>
+        </div>
+        <div class="mb-3">
+            <label for="lit" class="form-label">Điểm Văn:</label>
+            <input type="number" step="any" class="form-control" id="lit" name="math" value="${student.gradeVan}" required>
+        </div>
+        <div class="mb-3">
+            <label for="eng" class="form-label">Điểm Anh:</label>
+            <input type="number" step="any" class="form-control" id="eng" name="math" value="${student.gradeAnh}" required>
+        </div>
         <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
         <a href="students?action=list">Quay lại</a>
     </form>

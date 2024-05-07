@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "Servlet", urlPatterns = "/")
-public class Servlet extends HttpServlet {
+@WebServlet(name = "classServlet", urlPatterns = "/class")
+public class ClassServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect("/students");
+        String id = req.getParameter("id");
+        String name = req.getParameter("name");
+        System.out.println(id + " " +name);
     }
 }

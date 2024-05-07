@@ -1,9 +1,9 @@
 package controller;
 
 import model.Student;
-
-import service.StudentDAO;
+import service.IStudentService;
 import service.StudentService;
+
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,63 +12,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet(name = "StudentServlet", urlPatterns = "/students")
 public class StudentServlet extends HttpServlet {
-    private StudentService studentService = new StudentService();
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
-        if (action == null) {
-            action = "";
-        }
-        switch (action) {
-            case "create":
-                req.getRequestDispatcher("/create.jsp").forward(req, resp);
-                break;
-            case "edit":
-                int idEdit = Integer.parseInt(req.getParameter("id"));
-                Student studentToEdit = studentService.searchById(idEdit);
-                req.setAttribute("student", studentToEdit);
-                req.getRequestDispatcher("/edit.jsp").forward(req, resp);
-                break;
-            case "delete":
-                int idDelete = Integer.parseInt(req.getParameter("id"));
-                Student studentToDelete = studentService.searchById(idDelete);
-                req.setAttribute("student", studentToDelete);
-                req.getRequestDispatcher("/delete.jsp").forward(req, resp);
-                break;
-            case "view":
-                viewStudents(req,resp);
-                break;
-            default:
-                listStudents(req,resp);
-                break;
-        }
-    }
-
-    private void viewStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int idView = Integer.parseInt(req.getParameter("id"));
-        Student studentToView = this.studentService.searchById(idView);
-        RequestDispatcher dispatcher;
-        if (studentToView == null) {
-            dispatcher = req.getRequestDispatcher("error.jsp");
-        } else {
-            req.setAttribute("student", studentToView);
-            dispatcher = req.getRequestDispatcher("view.jsp");
-            dispatcher.forward(req,resp);
-        }
-    }
+    private final StudentService studentService = new StudentService();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html; charset=UTF-8");
         String action = req.getParameter("action");
+
         if (action == null) {
             action = "";
         }
+
         switch (action) {
             case "create":
                 createStudent(req, resp);
@@ -80,87 +46,166 @@ public class StudentServlet extends HttpServlet {
                 deleteStudent(req, resp);
                 break;
             default:
-//                resp.sendRedirect("error_page.jsp");
                 break;
         }
     }
-    private void listStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Student> students = this.studentService.showAll();
-        req.setAttribute("students", students);
 
-        RequestDispatcher dispatcher;
-        dispatcher = req.getRequestDispatcher("list.jsp");
-        dispatcher.forward(req,resp);
-    }
-
-
-
-    private void createStudent(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try {
-            int id = Integer.parseInt(req.getParameter("id"));
-            String name = req.getParameter("nameStudent");
-            String nameClass = req.getParameter("nameClass"); // Assume input includes class name
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date dob = format.parse(req.getParameter("dob"));
-
-            Student student = new Student();
-            student.setNameStudent(name);
-            student.setDob(new java.sql.Date(dob.getTime()));
-            student.setNameClass(nameClass); // Set nameClass directly
-            RequestDispatcher dispatcher;
-            if (student == null) {
-                dispatcher = req.getRequestDispatcher("error.jsp");
-            }
-            studentService.saveList(student);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.sendRedirect("error.jsp");
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
+        if (action == null) {
+            action = "";
+        }
+        switch (action) {
+            case "create":
+                showCreateForm(req, resp);
+                break;
+            case "edit":
+                showEditForm(req, resp);
+                break;
+            case "delete":
+                showDeleteForm(req, resp);
+                break;
+            case "view":
+                viewStudent(req, resp);
+                break;
+            default:
+                listStudents(req, resp);
+                break;
         }
     }
 
-    private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void viewStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int studentId = Integer.parseInt(req.getParameter("id"));
+        Student student = this.studentService.searchById(studentId);
+        RequestDispatcher dispatcher;
+
+        if (student == null) {
+            dispatcher = req.getRequestDispatcher("view/error-404.jsp");
+        } else {
+            req.setAttribute("student", student);
+            dispatcher = req.getRequestDispatcher("view/view.jsp");
+            dispatcher.forward(req,resp);
+        }
+    }
+
+    private void listStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Student> students = this.studentService.showAll();
+        for (Student student: students){
+            System.out.println(student.toString());
+        }
+        req.setAttribute("students", students);
+
+        req.getRequestDispatcher("view/list.jsp").forward(req,resp);
+    }
+
+    private void createStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher dispatcher;
         try {
-            int id = Integer.parseInt(req.getParameter("id"));
-            String name = req.getParameter("nameStudent");
-            String nameClass = req.getParameter("nameClass");
+            int studentId = Integer.parseInt(req.getParameter("id"));
+            String nameStudent = req.getParameter("nameStudent");
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date dob = format.parse(req.getParameter("dob"));
-//            double gradeToan = Double.parseDouble(req.getParameter("gradeToan"));
-//            double gradeVan = Double.parseDouble(req.getParameter("gradeVan"));
-//            double gradeAnh = Double.parseDouble(req.getParameter("gradeAnh"));
 
-            Student student = this.studentService.searchById(id);
+            double gradeToan = Double.parseDouble(req.getParameter("gradeToan"));
+            double gradeVan = Double.parseDouble(req.getParameter("gradeVan"));
+            double gradeAnh = Double.parseDouble(req.getParameter("gradeAnh"));
+
+            Student student = new Student(studentId, nameStudent, dob, gradeToan, gradeVan, gradeAnh);
+            this.studentService.saveList(student);
+            req.setAttribute("message", "Student created successfully!");
+            dispatcher = req.getRequestDispatcher("view/list.jsp");
+            dispatcher.forward(req, resp);
+        } catch (NumberFormatException | ParseException e) {
+            req.setAttribute("error", "Invalid input. Please enter valid data.");
+            dispatcher = req.getRequestDispatcher("createStudentForm.jsp");
+        } catch (Exception e) {
+            req.setAttribute("error", "An error occurred: " + e.getMessage());
+            dispatcher = req.getRequestDispatcher("error.jsp");
+        }
+    }
+
+
+    private void showCreateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher dispatcher = req.getRequestDispatcher("view/create.jsp");
+        dispatcher.forward(req,resp);
+    }
+
+    private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            int studentId = Integer.parseInt(req.getParameter("id"));
+            String nameStudent = req.getParameter("nameStudent");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date dob = format.parse(req.getParameter("dob"));
+
+            double gradeToan = Double.parseDouble(req.getParameter("gradeToan"));
+            double gradeVan = Double.parseDouble(req.getParameter("gradeVan"));
+            double gradeAnh = Double.parseDouble(req.getParameter("gradeAnh"));
+
+            Student student = this.studentService.searchById(studentId);
             RequestDispatcher dispatcher;
             if (student == null) {
                 dispatcher = req.getRequestDispatcher("error.jsp");
             } else {
-                student.setStudentId(id);
-                student.setNameStudent(name);
-                student.setDob(new java.sql.Date(dob.getTime()));
-                student.setNameClass(nameClass);
-//                student.setGradeToan(gradeToan);
-//                student.setGradeVan(gradeVan);
-//                student.setGradeAnh(gradeAnh);
-
-                studentService.update(id, student);
+                student.setStudentId(studentId);
+                student.setNameStudent(nameStudent);
+                student.setDob(dob);
+                student.setGradeToan(gradeToan);
+                student.setGradeVan(gradeVan);
+                student.setGradeAnh(gradeAnh);
+                this.studentService.update(studentId, student);
                 req.setAttribute("student", student);
-                dispatcher = req.getRequestDispatcher("edit.jsp");
-                dispatcher.forward(req,resp);
+                req.setAttribute("message", "Student information was updated successfully.");
+                dispatcher = req.getRequestDispatcher("view/edit.jsp");
+                dispatcher.forward(req, resp);
             }
-
-
-
-//            resp.sendRedirect("students?action=list");
         } catch (Exception e) {
+            req.setAttribute("error", "Error updating student: " + e.getMessage());
             e.printStackTrace();
-            resp.sendRedirect("error.jsp");
         }
     }
 
-    private void deleteStudent(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        studentService.delete(id);
-        resp.sendRedirect("student?action=list");
+
+    private void showEditForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int studentId = Integer.parseInt(req.getParameter("id"));
+        Student student = this.studentService.searchById(studentId);
+        RequestDispatcher dispatcher;
+        if (student == null) {
+            dispatcher = req.getRequestDispatcher("error.jsp");
+        } else {
+            req.setAttribute("post", student);
+            dispatcher = req.getRequestDispatcher("view/edit.jsp");
+            dispatcher.forward(req,resp);
+        }
+    }
+
+    private void deleteStudent(HttpServletRequest req, HttpServletResponse resp) {
+        int studentId = Integer.parseInt(req.getParameter("id"));
+        Student student = this.studentService.searchById(studentId);
+        RequestDispatcher dispatcher;
+        if (student == null) {
+            dispatcher = req.getRequestDispatcher("error.jsp");
+        } else {
+            this.studentService.delete(studentId);
+            try {
+                resp.sendRedirect("/students");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void showDeleteForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int studentId = Integer.parseInt(req.getParameter("id"));
+        Student student = this.studentService.searchById(studentId);
+        RequestDispatcher dispatcher;
+        if (student == null) {
+            dispatcher = req.getRequestDispatcher("error.jsp");
+        } else {
+            req.setAttribute("student", student);
+            dispatcher = req.getRequestDispatcher("view/delete.jsp");
+            dispatcher.forward(req,resp);
+        }
     }
 }
+
