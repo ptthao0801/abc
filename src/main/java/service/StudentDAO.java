@@ -9,7 +9,7 @@ public class StudentDAO {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/casestudy";
     private static final String JDBC_USERNAME = "root";
-    private static final String JDBC_PASSWORD = "khoatrinh18122001";
+    private static final String JDBC_PASSWORD = "12345678_ABC";
 
     protected Connection getConnection() {
         Connection connection = null;
